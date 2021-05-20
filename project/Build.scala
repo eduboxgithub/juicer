@@ -1,8 +1,10 @@
 import sbt._
 import Keys._
-import com.typesafe.startscript.StartScriptPlugin
-import sbtassembly.Plugin._
-import AssemblyKeys._
+import sbtassembly.AssemblyPlugin.autoImport._
+
+// import com.typesafe.startscript.StartScriptPlugin
+// import sbtassembly.Plugin._
+// import AssemblyKeys._
 
 object BuildSettings {
   import Dependencies._
