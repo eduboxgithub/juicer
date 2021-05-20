@@ -1,7 +1,5 @@
 import sbt._
 import Keys._
-import sbtassembly.AssemblyPlugin.autoImport._
-
 // import com.typesafe.startscript.StartScriptPlugin
 // import sbtassembly.Plugin._
 // import AssemblyKeys._
@@ -59,23 +57,23 @@ object JuicerBuild extends Build {
 
     override lazy val settings = super.settings ++ globalSettings
 
-    lazy val root = Project("juicer",
-                      file("."),
-                      settings = projectSettings ++
-                      Seq(
-                          StartScriptPlugin.stage in Compile := Unit
-                      )) aggregate(service, web)
+    lazy val root = Project("juicer" in file("."),
+                      settings(globalSettings: _*),
+                      settings(
+                        Seq(StartScriptPlugin.stage in Compile := Unit)) aggregate(service, web)
+                      )
 
-    lazy val service = Project("juicer-service",
-                      file("juicer-service"),
-                      settings = projectSettings ++
-                      Seq(libraryDependencies ++= Seq(slf4jSimple, slf4jSimpleTest, goose, corenlp)))
+    lazy val service = Project("juicer-service" in file("juicer-service"),
+                      settings(globalSettings: _*),
+                      settings(
+                        Seq(libraryDependencies ++= Seq(slf4jSimple, slf4jSimpleTest, goose, corenlp)))
+                      )
 
 
-    lazy val web = Project("juicer-web",
-                      file("juicer-web"),
-                      settings = projectSettings ++
-                      StartScriptPlugin.startScriptForClassesSettings ++
-                      Seq(libraryDependencies ++= Seq(jettyServer, jettyServlet, slf4jSimple, liftJson, scalatra, scalatraTest))) dependsOn(service % "compile->compile;test->test")
+    lazy val web = Project(project in file("juicer-web"),
+                      settings(globalSettings: _*),
+                      settings(
+                        Seq(libraryDependencies ++= Seq(jettyServer, jettyServlet, slf4jSimple, liftJson, scalatra, scalatraTest))) dependsOn(service % "compile->compile;test->test")
+                      )
 
 }
